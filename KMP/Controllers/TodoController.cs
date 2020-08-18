@@ -89,10 +89,14 @@ namespace KMP.Controllers
                 return BadRequest();
             }
 
+            var old_todo = await _context.Todo.FindAsync(id);
+
+            _context.Entry(old_todo).State = EntityState.Detached;
             _context.Entry(todo).State = EntityState.Modified;
 
             try
             {
+                todo.Created = old_todo.Created;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

@@ -42,3 +42,39 @@ Get Current Week's Todos
 GET https://localhost:5001/api/Todo?Start=current_week
 ```
 
+Create Todo
+```
+POST https://localhost:5001/api/Todo
+{
+    "title": "Learn Something",
+    "description": "Learn Somethings Best Practice",
+    "percentage": 0,
+    "created": "2020-08-18T13:38:02+07:00",
+    "started": "2020-08-19T00:00:00",
+    "expired": null
+ }
+```
+
+Get specific todo
+```
+GET https://localhost:5001/api/Todo/<id>
+```
+
+Update Todo
+```
+PUT https://localhost:5001/api/Todo/<id>
+{
+    "id": <id>
+    "title": "Learn Something",
+    "description": "Learn Somethings Best Practice",
+    "percentage": 0,
+    "created": "2020-08-18T13:38:02+07:00",
+    "started": "2020-08-19T00:00:00",
+    "expired": null
+ }
+```
+
+Delete Todo
+```
+DELETE https://localhost:5001/api/Todo/<id>
+```
