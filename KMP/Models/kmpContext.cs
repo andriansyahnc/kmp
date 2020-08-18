@@ -52,6 +52,10 @@ namespace KMP.Models
                     .HasColumnName("percentage")
                     .HasColumnType("tinyint(4)");
 
+                entity.Property(e => e.Started)
+                    .HasColumnName("started")
+                    .HasDefaultValueSql("'''0000-00-00 00:00:00'''");
+
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasColumnName("title")
