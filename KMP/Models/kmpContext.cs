@@ -43,10 +43,10 @@ namespace KMP.Models
                     .IsRequired()
                     .HasColumnName("description");
 
-                entity.Property(e => e.Expiry)
-                    .HasColumnName("expiry")
-                    .HasDefaultValueSql("'NULL'")
-                    .ValueGeneratedOnAddOrUpdate();
+                entity.Property(e => e.Expired)
+                    .HasColumnName("expired")
+                    .HasColumnType("date")
+                    .HasDefaultValueSql("'NULL'");
 
                 entity.Property(e => e.Percentage)
                     .HasColumnName("percentage")
@@ -54,7 +54,7 @@ namespace KMP.Models
 
                 entity.Property(e => e.Started)
                     .HasColumnName("started")
-                    .HasDefaultValueSql("'''0000-00-00 00:00:00'''");
+                    .HasColumnType("date");
 
                 entity.Property(e => e.Title)
                     .IsRequired()

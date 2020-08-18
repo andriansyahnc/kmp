@@ -11,7 +11,7 @@ namespace KMP.Models
         public byte Percentage { get; set; }
         public DateTimeOffset Created { get; set; }
         public DateTimeOffset? Updated { get; set; }
-        public DateTimeOffset Started { get; set; }
-        public DateTimeOffset? Expiry { get; set; }
+        public DateTime Started { get; set; }
+        public DateTime? Expired { get; set; }
     }
 }

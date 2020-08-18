@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KMP.Models;
+using DateTimeExtensions;
 
 namespace KMP.Controllers
 {
@@ -20,11 +20,50 @@ namespace KMP.Controllers
             _context = context;
         }
 
-        // GET: api/Todo
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Todo>>> GetTodo()
+        public IQueryable<Todo> GetAllTodo()
         {
-            return await _context.Todo.ToListAsync();
+            return _context.Todo.AsQueryable();
+        }
+
+        private DateTime getToday(DateTime u, int add) {
+            return new DateTime(u.Year, u.Month, u.Day).AddDays(add);
+        }
+
+        // GET: api/Todo
+        // Accepted filter: Start=now/toworrow/current_week
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Todo>>> GetTodo(
+            [FromQuery(Name = "Start")] string start_date
+        )
+        {
+            if (start_date == null) {
+                return await _context.Todo.ToListAsync();
+            }
+
+            DateTime now = DateTime.Now;
+            DateTime today = new DateTime(now.Year, now.Month, now.Day);
+            if (start_date == "now")
+            {
+                return await GetAllTodo().Where(t => t.Started == today).ToListAsync();
+            }
+            else if (start_date == "tomorrow")
+            {
+                today = today.AddDays(1);
+                return await GetAllTodo().Where(t => t.Started == today).ToListAsync();
+            }
+            else if (start_date == "current_week")
+            {
+                var monday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+                var next_monday = monday.AddDays(7);
+                return await GetAllTodo()
+                    .Where(t => t.Started >= monday)
+                    .Where(t => t.Started < next_monday)
+                    .ToListAsync();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/Todo/5
@@ -42,8 +81,6 @@ namespace KMP.Controllers
         }
 
         // PUT: api/Todo/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodo(int id, Todo todo)
         {
@@ -74,8 +111,6 @@ namespace KMP.Controllers
         }
 
         // POST: api/Todo
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Todo>> PostTodo(Todo todo)
         {
